@@ -5,13 +5,9 @@ Checks an IP:Port list of SOCKS4/5 and outputs working proxies to a file.
 
 
 Inputs:
-
 Proxy list - An absolute path to the file containing a list of proxies in the of IP:Port
-
 Output file - An absolute path to the file that the live SOCKS4/5 proxies will be written to.
-
 Threads - The number of threads that will be used to check proxies. More threads = quicker scanning. If the thread count is too high, your internet connection may be interrupted and false timeouts/connection refused errors will be printed.
-
 Timeout - The amount of time to give a potential proxy to repond before giving up and trying the next.
 
 
