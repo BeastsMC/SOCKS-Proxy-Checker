@@ -1,3 +1,4 @@
+#Developed by TheBeast808
 import socket
 import Queue
 import threading
