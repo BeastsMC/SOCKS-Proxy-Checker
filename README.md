@@ -5,6 +5,7 @@ Checks an IP:Port list of SOCKS4/5 and outputs working proxies to a file.
 
 
 Inputs:
+
 Proxy list - An absolute path to the file containing a list of proxies in the of IP:Port
 
 Output file - An absolute path to the file that the live SOCKS4/5 proxies will be written to.
