@@ -1,6 +1,6 @@
 #Developed by TheBeast808
 import socket
-import Queue
+import queue
 import threading
 import time
 from struct import *
@@ -11,7 +11,7 @@ class ThreadChecker(threading.Thread):
 		threading.Thread.__init__(self)
 	def isSocks4(self, host, port, soc):
 		ipaddr = socket.inet_aton(host)
-		packet4 = "\x04\x01" + pack(">H",port) + ipaddr + "\x00"
+		packet4 = b"\x04\x01" + pack(">H",port) + ipaddr + b"\x00"
 		soc.sendall(packet4)
 		data = soc.recv(8)
 		if(len(data)<2):
@@ -25,7 +25,7 @@ class ThreadChecker(threading.Thread):
 			return False
 		return True
 	def isSocks5(self, host, port, soc):
-		soc.sendall("\x05\x01\x00")
+		soc.sendall(b"\x05\x01\x00")
 		data = soc.recv(2)
 		if(len(data)<2):
 			# Null response
@@ -42,18 +42,18 @@ class ThreadChecker(threading.Thread):
 		try:
 			port = int(proxy.split(":")[1])
 			if port < 0 or port > 65536:
-				print "Invalid: " + proxy
+				print("Invalid: " + proxy)
 				return 0
 		except:
-			print "Invalid: " + proxy
+			print("Invalid: " + proxy)
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.settimeout(self.timeout)
 		try:
-			s.connect((host, port))
-			if(self.isSocks4(host, port, s)):
+			s.connect(host, port)
+			if(self.isSocks4(host, port, s):
 				s.close()
 				return 5
-			elif(self.isSocks5(host, port, s)):
+			elif(self.isSocks5(host, port, s):
 				s.close()
 				return 4
 			else:
@@ -61,11 +61,11 @@ class ThreadChecker(threading.Thread):
 				s.close()
 				return 0
 		except socket.timeout:
-			print "Timeout: " + proxy
+			print("Timeout: " + proxy)
 			s.close()
 			return 0
 		except socket.error:
-			print "Connection refused: " + proxy
+			print("Connection refused: " + proxy)
 			s.close()
 			return 0
 	def run(self):
@@ -73,7 +73,7 @@ class ThreadChecker(threading.Thread):
 			proxy = self.q.get()
 			version = self.getSocksVersion(proxy)
 			if version == 5 or version == 4:
-				print "Working: " + proxy
+				print("Working: " + proxy)
 				socksProxies.put(proxy)
 			self.q.task_done()
 class ThreadWriter(threading.Thread):
@@ -85,28 +85,28 @@ class ThreadWriter(threading.Thread):
 		while True:
 			toWrite = self.q.qsize()
 			outputFile = open(self.outputPath, 'a+')
-			for i in xrange(toWrite):
+			for i in range(toWrite):
 				proxy = self.q.get()
 				outputFile.write(proxy + "\n")
 				self.q.task_done()
 			outputFile.close()
 			time.sleep(10)
-checkQueue = Queue.Queue()
-socksProxies = Queue.Queue()
-inputFile = open(raw_input("Proxy list: "), 'r')
-outputPath = raw_input("Output file: ")
-threads = int(raw_input("Number of threads: "))
-timeout = int(raw_input("Timeout(seconds): "))
+checkQueue = queue.Queue()
+socksProxies = queue.Queue()
+inputFile = open(input("Proxy list: "), 'r')
+outputPath = input("Output file: ")
+threads = int(input("Number of threads: ")
+timeout = int(input("Timeout(seconds): ")
 for line in inputFile.readlines():
-	checkQueue.put(line.strip('\n'))
+	checkQueue.put(line.strip('\n')
 inputFile.close()
-for i in xrange(threads):
+for i in range(threads):
 	t = ThreadChecker(checkQueue, timeout)
-	t.setDaemon(True)
+	t.daemon = True
 	t.start()
 	time.sleep(.25)
 wT = ThreadWriter(socksProxies, outputPath)
-wT.setDaemon(True)
+wT.daemon = True
 wT.start()
 checkQueue.join()
 socksProxies.join()

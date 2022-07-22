@@ -1,5 +1,6 @@
-SOCKS-Proxy-Checker
-===================
+# SOCKS-Proxy-Checker
+
+### Support Python3
 
 Checks an IP:Port list of SOCKS4/5 and outputs working proxies to a file.
 
