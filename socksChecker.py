@@ -49,11 +49,11 @@ class ThreadChecker(threading.Thread):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.settimeout(self.timeout)
 		try:
-			s.connect(host, port)
-			if(self.isSocks4(host, port, s):
+			s.connect((host, port))
+			if(self.isSocks4(host, port, s)):
 				s.close()
 				return 5
-			elif(self.isSocks5(host, port, s):
+			elif(self.isSocks5(host, port, s)):
 				s.close()
 				return 4
 			else:
@@ -95,10 +95,10 @@ checkQueue = queue.Queue()
 socksProxies = queue.Queue()
 inputFile = open(input("Proxy list: "), 'r')
 outputPath = input("Output file: ")
-threads = int(input("Number of threads: ")
-timeout = int(input("Timeout(seconds): ")
+threads = int(input("Number of threads: "))
+timeout = int(input("Timeout(seconds): "))
 for line in inputFile.readlines():
-	checkQueue.put(line.strip('\n')
+	checkQueue.put(line.strip('\n'))
 inputFile.close()
 for i in range(threads):
 	t = ThreadChecker(checkQueue, timeout)
