@@ -1,6 +1,6 @@
 #Developed by TheBeast808
 import socket
-import Queue
+import queue
 import threading
 import time
 from struct import *
@@ -42,10 +42,10 @@ class ThreadChecker(threading.Thread):
 		try:
 			port = int(proxy.split(":")[1])
 			if port < 0 or port > 65536:
-				print "Invalid: " + proxy
+				print("Invalid: " + proxy)
 				return 0
 		except:
-			print "Invalid: " + proxy
+			print("Invalid: " + proxy)
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.settimeout(self.timeout)
 		try:
@@ -61,11 +61,11 @@ class ThreadChecker(threading.Thread):
 				s.close()
 				return 0
 		except socket.timeout:
-			print "Timeout: " + proxy
+			print("Timeout: " + proxy)
 			s.close()
 			return 0
 		except socket.error:
-			print "Connection refused: " + proxy
+			print("Connection refused: " + proxy)
 			s.close()
 			return 0
 	def run(self):
@@ -73,7 +73,7 @@ class ThreadChecker(threading.Thread):
 			proxy = self.q.get()
 			version = self.getSocksVersion(proxy)
 			if version == 5 or version == 4:
-				print "Working: " + proxy
+				print("Working: " + proxy)
 				socksProxies.put(proxy)
 			self.q.task_done()
 class ThreadWriter(threading.Thread):
@@ -85,22 +85,24 @@ class ThreadWriter(threading.Thread):
 		while True:
 			toWrite = self.q.qsize()
 			outputFile = open(self.outputPath, 'a+')
-			for i in xrange(toWrite):
+			for i in range(toWrite):
 				proxy = self.q.get()
 				outputFile.write(proxy + "\n")
 				self.q.task_done()
 			outputFile.close()
 			time.sleep(10)
-checkQueue = Queue.Queue()
-socksProxies = Queue.Queue()
-inputFile = open(raw_input("Proxy list: "), 'r')
-outputPath = raw_input("Output file: ")
-threads = int(raw_input("Number of threads: "))
-timeout = int(raw_input("Timeout(seconds): "))
+checkQueue = queue.Queue()
+
+socksProxies = queue.Queue()
+
+inputFile = open(input("Proxy list: "), 'r')
+outputPath = input("Output file: ")
+threads = int(input("Number of threads: "))
+timeout = int(input("Timeout(seconds): "))
 for line in inputFile.readlines():
 	checkQueue.put(line.strip('\n'))
 inputFile.close()
-for i in xrange(threads):
+for i in range(threads):
 	t = ThreadChecker(checkQueue, timeout)
 	t.setDaemon(True)
 	t.start()
